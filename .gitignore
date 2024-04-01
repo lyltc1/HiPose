@@ -18,4 +18,4 @@ data/tless/*
 *README_.md
 docker/opencv-3.4.12.zip
 docker/opencv_contrib-3.4.12.zip
-
+hipose/detection_results/*
