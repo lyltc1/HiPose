@@ -332,9 +332,6 @@ def main(configs):
     ##get camera parameters
     camera_params_dict = dict()
     for scene_id in os.listdir(bop_test_folder):
-        if scene_id.endswith(".zip"):
-            print("debug code due to I have my own test folder in lmo/test, need to be deleted when releasing code")
-            continue
         current_dir = bop_test_folder+"/"+scene_id
         scene_params = inout.load_scene_camera(os.path.join(current_dir,"scene_camera.json"))     
         camera_params_dict[scene_id] = scene_params    
