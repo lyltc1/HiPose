@@ -1,11 +1,12 @@
 # Run Code in Docker
 
-## Download
+## Download Opencv
+The normalSpeed function requires opencv3 as a necessary component.
 1. Download opencv = 3.4.12 from [this link](https://github.com/opencv/opencv/archive/refs/tags/3.4.12.zip).
 2. Download opencv_contrib = 3.4.12 from [this link](https://github.com/opencv/opencv_contrib/archive/refs/tags/3.4.12.zip).
 
 ## Download the image
-We provide an image which can be downloaded.
+We provide an image that can be downloaded using the command below.
 ```
 docker pull lyltc1/hipose:latest
 ```
@@ -22,8 +23,8 @@ docker run -it --runtime=nvidia -e NVIDIA_DRIVER_CAPABILITIES=all \
 --gpus all --shm-size 12G --device=/dev/dri --group-add video \
 --volume=/tmp/.X11-unix:/tmp/.X11-unix --env="DISPLAY=$DISPLAY" \
 --env="QT_X11_NO_MITSHM=1" --name HiPose \
--v /home/lyl/dataset/:/home/dataset:ro \
--v /home/lyl/git/output/:/home/HiPose/output:rw \
+-v path/to/dataset/:/home/dataset:ro \
+-v path/to/output/:/home/HiPose/output:rw \
 lyltc1/hipose:latest /bin/bash
 ```
 
@@ -35,13 +36,12 @@ git pull
 ```
 
 ## prepare soft link
-Assume the dataset and GT from zebrapose has been prepared.
+Assume that the dataset and Ground Truth (GT) from `zebrapose` have already been prepared.
 ```
 ln -sf /home/dataset/pbr/lmo/* /home/HiPose/data/lmo/
 ln -sf /home/dataset/zebrapose/data/lmo/* /home/HiPose/data/lmo/
 ```
-Similarlly, you can also prepare the datasets for ycbv and tless.
-This is what should be look like in data/lmo/ directory:
+Similarly, you can also prepare the datasets for ycbv and tless. Here's what the data/lmo/ directory should look like:
 ```
 root@e8534fc7d360:/home/HiPose# ls data/lmo/
 .gitkeep                            models_eval/                        camera.json                                             
@@ -53,12 +53,12 @@ models_GT_color/                    test_targets_bop19.json
 ## evaluate
 ```
 cd /home/HiPose/hipose
-python test.py --cfg config/bop_lmo_config.txt --obj_name ape --ckpt_file /home/dataset/HiPoseCkpt/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /home/HiPose/output/exp/lmo_bop  --new_solver_version True  --region_bit 10
+`python test.py --cfg config/test_lmo_config.txt --obj_name ape --ckpt_file /path/to/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /path/to/eval_output --new_solver_version True --region_bit 10`
 ```
 The output `lmo_ape.csv` can be find in `output/exp/lmo_bop`
 
 ## train
 ```
 cd /home/HiPose/hipose
-python train.py --cfg config/bop_lmo_config.txt --obj_name ape
+python train.py --cfg config/train_lmo_config.txt --obj_name ape
 ```
