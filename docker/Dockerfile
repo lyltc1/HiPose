@@ -39,6 +39,7 @@ RUN python3 setup.py install --user
 # Install other dependency
 RUN apt-get install -y libgl1
 RUN pip install tqdm
+RUN pip install tensorboard
 RUN pip install opencv-python-headless
 RUN pip install imgaug
 RUN pip install pandas

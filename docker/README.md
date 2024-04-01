@@ -53,11 +53,12 @@ models_GT_color/                    test_targets_bop19.json
 ## evaluate
 ```
 cd /home/HiPose/hipose
-python test.py --cfg config/config_zebra3d/lmo_zebra3D_32_no_hier_lmo_bop_gdrnpp_.txt --obj_name ape --ckpt_file /home/dataset/z3d/lmo_zebra3D_32_no_hier_lmo_bop_ape/0_7668step37000 --ignore_bit 0 --eval_output_path /home/z3d/output/
+python test.py --cfg config/bop_lmo_config.txt --obj_name ape --ckpt_file /home/dataset/HiPoseCkpt/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /home/HiPose/output/exp/lmo_bop  --new_solver_version True  --region_bit 10
 ```
+The output folder can be find in `output/exp/lmo_bop`
 
-## Docker Usage
+## train
 ```
-docker stop HiPose
-docker rm HiPose
+cd /home/HiPose/hipose
+
 ```
