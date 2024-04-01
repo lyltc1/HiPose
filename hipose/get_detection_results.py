@@ -117,4 +117,3 @@ def ycbv_select_keyframe(detection_results_file, rgb_fns):
             key_frame_idx.append(counter)
 
     return key_frame_idx
-
