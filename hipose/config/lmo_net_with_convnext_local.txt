@@ -1,10 +1,8 @@
 #### training dataset
 bop_challange = False
-bop_path = /home/z3d/data
-# bop_path = /home/ysu/data/data_object_pose/BOP
+bop_path = /home/HiPose/data
 dataset_name = lmo
 training_data_folder = test
-# training_data_folder = bop_pbr
 training_data_folder_2 = none
 val_folder = test
 test_folder = test
