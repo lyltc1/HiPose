@@ -342,7 +342,7 @@ def main(configs):
                 writer.add_scalar('TRAIN_ADD/ADD_Error_Train', ADD_error, iteration_step)
                 net.train()
     
-                ADD_passed = test_network_with_single_obj(net, test_loader, obj_diameter, writer, dict_class_id_3D_points, vertices, iteration_step, configs, 0,calc_add_and_adi=False)
+                ADD_passed, AUC_ADX_score = test_network_with_single_obj(net, test_loader, obj_diameter, writer, dict_class_id_3D_points, vertices, iteration_step, configs, 0,calc_add_and_adi=False)
                 print("ADD_passed", ADD_passed)
                 if ADD_passed >= best_score:
                     best_score = ADD_passed
