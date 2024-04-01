@@ -24,7 +24,7 @@ Setting up the environment can be tedious, so we've provided a Dockerfile to sim
     └── BOP ROOT PATH/
         ├── lmo   
         ├── ycbv/
-        │   ├── models            #(from step 1 or step 2)
+        │   ├── models            #(from step 1 or step 2, both OK)
         │   ├── models_eval
         │   ├── test              #(testing datasets)
         │   ├── train_pbr         #(training datasets)
