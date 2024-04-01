@@ -1,5 +1,4 @@
 from binary_code_helper.class_id_encoder_decoder import class_code_images_to_class_id_image
-from vis_utils.vis_utils import vis_input_cloud, vis_error
 import time
 import random
 import numpy as np
@@ -322,13 +321,6 @@ def CNN_outputs_to_object_pose_with_uncertainty_hierarchy_v1(
     num = len(observed_pts)
     if num <= 4:
         return None, None, False
-    
-    # # generate gt_obj_model_pts from class_code_image_target, for visualization only
-    # gt_code_image = class_code_image_target[:, 0, :][obj_pts_idx]
-    # gt_class_id = class_code_images_to_class_id_image(gt_code_image[None], class_base)[0]
-    # gt_obj_model_pts = np.zeros((gt_class_id.shape[0], 3))
-    # for i, id in enumerate(gt_class_id):
-    #     gt_obj_model_pts[i] = dict_class_id_3D_points[id]
 
     input_cloud = input_cloud[~ obj_pts_idx]
     mask_probability = mask_probability[obj_pts_idx]
@@ -403,13 +395,6 @@ def CNN_outputs_to_object_pose_with_uncertainty_hierarchy_v2(
     if num <= 4:
         return None, None, False
     
-    # # generate gt_obj_model_pts from class_code_image_target, for visualization only
-    # gt_code_image = class_code_image_target[:, 0, :][obj_pts_idx]
-    # gt_class_id = class_code_images_to_class_id_image(gt_code_image[None], class_base)[0]
-    # gt_obj_model_pts = np.zeros((gt_class_id.shape[0], 3))
-    # for i, id in enumerate(gt_class_id):
-    #     gt_obj_model_pts[i] = dict_class_id_3D_points[id]
-
     input_cloud = input_cloud[~ obj_pts_idx]
     mask_probability = mask_probability[obj_pts_idx]
     code_probability = code_probability[obj_pts_idx]
