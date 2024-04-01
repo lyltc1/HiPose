@@ -5,35 +5,12 @@ The implementation of the paper 'HiPose: Hierarchical Binary Surface Encoding an
 ![pipeline](pic/overview.png)
 
 ## Installation
-- CUDA 11.1 or 11.6 (other versions may also work)
-- torch 1.13.1 and torchvision 0.14.1 (other versions may also work)
-- Set up python3 environment from requirement.txt:
-```
-apt-get install -y libgl1-mesa-glx  # need by open3d
-pip3 install -r requirement.txt
-```
+- CUDA 11.1 or 11.6
+- torch 1.13.1 and torchvision 0.14.1
+- Open3d
 - Install [normalSpeed](https://github.com/hfutcgncas/normalSpeed), a fast and light-weight normal map estimator:
-  ```shell
-  git clone https://github.com/hfutcgncas/normalSpeed.git
-  cd normalSpeed/normalSpeed
-  python3 setup.py install --user
-  cd ../..
-  ```
 - Compile [RandLA-Net](https://github.com/qiqihaer/RandLA-Net-pytorch) operators:
-  ```shell
-  cd hipose/models/RandLA/
-  apt-get update
-  apt-get install -y build-essential
-  pip install Cython
-  sh compile_op.sh
-  ```
 - Install [`bop_toolkit`](https://github.com/thodan/bop_toolkit)
-  ```shell
-  git clone https://github.com/thodan/bop_toolkit.git
-  cd bop_toolkit
-  pip install -r requirements.txt -e .
-  cd ..
-  ```
 
 ## Data preparation
 1. Download the dataset from [`BOP benchmark`](https://bop.felk.cvut.cz/datasets/), wherein our current focus lies on the LMO, TLESS, and YCBV datasets. Feel free to obtain any one of these datasets for the purpose of testing.
@@ -62,8 +39,9 @@ pip3 install -r requirement.txt
 
 ### Training
 Adjust the paths in the config files, and train the network with `train.py`, e.g.
-`python train.py --cfg config/bop_lmo_config.txt --obj_name ape`
-`python train.py --cfg config/bop_ycbv_config.txt --obj_name wood_block`
+`python train.py --cfg config/lmo_net_with_convnext.txt --obj_name ape`
+<!-- `python train.py --cfg config/bop_lmo_config.txt --obj_name ape`
+`python train.py --cfg config/bop_ycbv_config.txt --obj_name wood_block` -->
 
 The script will save the last 3 checkpoints and the best checkpoint, as well as tensorboard log. 
 
