@@ -4,7 +4,7 @@ The implementation of the paper 'HiPose: Hierarchical Binary Surface Encoding an
 
 ![pipeline](pic/overview.png)
 
-## Installation
+## Environment
 - CUDA 11.1 or 11.6
 - torch 1.13.1 and torchvision 0.14.1
 - Open3d
@@ -15,7 +15,7 @@ The implementation of the paper 'HiPose: Hierarchical Binary Surface Encoding an
 Setting up the environment can be tedious, so we've provided a Dockerfile to simplify the process. Please refer to the [README](./docker/README.md) in the Docker directory for more information.
 
 ## Data preparation
-1. Download the dataset from [`BOP benchmark`](https://bop.felk.cvut.cz/datasets/), wherein our current focus lies on the LMO, TLESS, and YCBV datasets. Feel free to obtain any one of these datasets for the purpose of testing.
+1. Download the dataset from the [`BOP benchmark`](https://bop.felk.cvut.cz/datasets/). Currently, our focus is on the LMO, TLESS, and YCBV datasets. We recommend using the LMO dataset for testing purposes due to its smaller size.
 2. Download required ground truth folders of zebrapose from [`owncloud`](https://cloud.dfki.de/owncloud/index.php/s/zT7z7c3e666mJTW). The folders are `models_GT_color`, `XX_GT` (e.g. `train_real_GT` and `test_GT`) and `models` (`models` is optional, only if you want to generate GT from scratch, it contains more files needed to generate GT, but also contains all the origin files from BOP).
 
 3. The expected data structure: 
@@ -26,7 +26,6 @@ Setting up the environment can be tedious, so we've provided a Dockerfile to sim
         ├── ycbv/
         │   ├── models            #(from step 1 or step 2)
         │   ├── models_eval
-        │   ├── models_fine
         │   ├── test              #(testing datasets)
         │   ├── train_pbr         #(training datasets)
         │   ├── train_real        #(not needed; we exclusively trained on PBR data.)
@@ -39,16 +38,15 @@ Setting up the environment can be tedious, so we've provided a Dockerfile to sim
     ```
 4. (Optional) Instead of download the ground truth, you can also generate them from scratch, details in [`Generate_GT.md`](Binary_Code_GT_Generator/Generate_GT.md). 
 
-### Training
+## Testing
+Download our trained model from this [`link`](https://1drv.ms/f/s!At2pVfImERx7cM_BVybbo-ThTP4?e=wfbikU).
+`python test.py --cfg config/bop_lmo_config.txt --obj_name ape --ckpt_file /path/to/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /path/to/eval_output --new_solver_version True --region_bit 10`
+
+## Training
 Adjust the paths in the config files, and train the network with `train.py`, e.g.
 `python train.py --cfg config/lmo_net_with_convnext.txt --obj_name ape`
 
 The script will save the last 3 checkpoints and the best checkpoint, as well as tensorboard log. 
-
-## Test with trained model
-For most datasets, a specific object occurs only once in a test images. 
-`python test.py --cfg config/bop_lmo_config.txt --obj_name ape --ckpt_file /path/to/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /path/to/eval_output --new_solver_version True --region_bit 10`
-Download our trained model from this [`link`](https://1drv.ms/f/s!At2pVfImERx7cM_BVybbo-ThTP4?e=wfbikU).
 
 ## Evaluate for BOP challange 
 Merge the `.csv` files generated in the last step using `tools_for_BOP/merge_csv.py`, e.g.

@@ -167,10 +167,14 @@ def main(configs):
     print('test_rgb_file exsample', test_rgb_files[obj_id][0])
 
     if Detection_reaults != 'none':
+        if configs['detector']=='FCOS':
+            from get_detection_results import get_detection_results
+        elif configs['detector']=='MASKRCNN':
+            from get_mask_rcnn_results import get_detection_results
         Det_Bbox = get_detection_results(Detection_reaults, test_rgb_files[obj_id], obj_id+1, 0)
     else:
         Det_Bbox = None
-
+        
     test_dataset = bop_dataset_single_obj_3d(
                                             dataset_dir_test, val_folder, test_rgb_files[obj_id], test_depth_files[obj_id], test_mask_files[obj_id], test_mask_visib_files[obj_id], 
                                             test_gts[obj_id], test_gt_infos[obj_id], camera_params_test[obj_id], False, BoundingBox_CropSize_image,
