@@ -1,0 +1,6 @@
+numpy
+tqdm
+opencv-python-headless
+imgaug
+open3d
+timm
