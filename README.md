@@ -8,9 +8,11 @@ The implementation of the paper 'HiPose: Hierarchical Binary Surface Encoding an
 - CUDA 11.1 or 11.6
 - torch 1.13.1 and torchvision 0.14.1
 - Open3d
-- Install [normalSpeed](https://github.com/hfutcgncas/normalSpeed), a fast and light-weight normal map estimator:
-- Compile [RandLA-Net](https://github.com/qiqihaer/RandLA-Net-pytorch) operators:
-- Install [`bop_toolkit`](https://github.com/thodan/bop_toolkit)
+- [normalSpeed](https://github.com/hfutcgncas/normalSpeed), a fast and light-weight normal map estimator
+- [RandLA-Net](https://github.com/qiqihaer/RandLA-Net-pytorch) operators
+- [`bop_toolkit`](https://github.com/thodan/bop_toolkit)
+
+Setting up the environment can be tedious, so we've provided a Dockerfile to simplify the process. Please refer to the [README](./docker/README.md) in the Docker directory for more information.
 
 ## Data preparation
 1. Download the dataset from [`BOP benchmark`](https://bop.felk.cvut.cz/datasets/), wherein our current focus lies on the LMO, TLESS, and YCBV datasets. Feel free to obtain any one of these datasets for the purpose of testing.
