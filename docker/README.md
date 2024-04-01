@@ -16,6 +16,12 @@ Pay attention to the dataset and output volume.
 docker run -it --runtime=nvidia -e NVIDIA_DRIVER_CAPABILITIES=all --gpus all --shm-size 12G --device=/dev/dri --group-add video --volume=/tmp/.X11-unix:/tmp/.X11-unix --env="DISPLAY=$DISPLAY" --env="QT_X11_NO_MITSHM=1" --name HiPose -v /home/lyl/dataset/:/home/dataset:ro -v /home/lyl/git/output/:/home/HiPose/output:rw lyltc1/hipose:latest /bin/bash
 ```
 
+## update to the latest version of HiPose repository
+```
+cd /home/HiPose
+git pull
+```
+
 ## prepare soft link
 Assume the dataset and GT from zebrapose has been prepared.
 ```
