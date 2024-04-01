@@ -1,0 +1,66 @@
+#### training dataset
+bop_challange = False
+bop_path = /home/z3d/data
+# bop_path = /home/ysu/data/data_object_pose/BOP
+dataset_name = lmo
+training_data_folder = test
+# training_data_folder = bop_pbr
+training_data_folder_2 = none
+val_folder = test
+test_folder = test
+second_dataset_ratio = 0.75
+num_workers = 8
+train_obj_visible_theshold = 0.2
+####
+
+#### network settings
+BoundingBox_CropSize_image = 256
+
+BinaryCode_Loss_Type = BCE
+mask_binary_code_loss = True 
+
+use_histgramm_weighted_binary_loss = False
+fusion = False
+# choose from [False, convnext_base, convnext_large]
+convnext = convnext_base
+####
+
+#### check points
+load_checkpoint=False
+check_point_path=/home/ysu/data/6dof_pose_experiments/experiments/z3d/lmo_bop/checkpoints/
+tensorboard_path=/home/ysu/data/6dof_pose_experiments/experiments/z3d/lmo_bop/tensorboard_logs/runs/
+####
+
+
+#### optimizer
+optimizer_type = Adam
+learning_rate = 0.0001
+use_lr_scheduler = False
+batch_size = 16
+total_iteration = 380000
+
+binary_loss_weight = 3
+#### 
+
+
+#### augmentations
+Detection_reaults = detection_results/lmo/fcos_V57eSE_MSx1333_ColorAugAAEWeaker_8e_lmo_pbr.json
+
+#Detection_reaults = none
+
+padding_ratio = 1.5
+resize_method = crop_square_resize
+
+use_peper_salt= True
+use_motion_blur= True
+aug_depth = True
+aug_depth_megapose6d = False
+interpolate_depth = False
+shift_center = False
+shift_from_center=False
+
+#binary coding settings
+divide_number_each_itration = 2
+number_of_itration = 16
+
+detector = FCOS

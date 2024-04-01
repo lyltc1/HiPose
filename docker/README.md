@@ -55,10 +55,10 @@ models_GT_color/                    test_targets_bop19.json
 cd /home/HiPose/hipose
 python test.py --cfg config/bop_lmo_config.txt --obj_name ape --ckpt_file /home/dataset/HiPoseCkpt/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /home/HiPose/output/exp/lmo_bop  --new_solver_version True  --region_bit 10
 ```
-The output folder can be find in `output/exp/lmo_bop`
+The output `lmo_ape.csv` can be find in `output/exp/lmo_bop`
 
 ## train
 ```
 cd /home/HiPose/hipose
-
+python train.py --cfg config/bop_lmo_config.txt --obj_name ape
 ```

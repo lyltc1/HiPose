@@ -1,7 +1,5 @@
 # HiPose
 
-The repository is not ready, please wait!
-
 The implementation of the paper 'HiPose: Hierarchical Binary Surface Encoding and Correspondence Pruning for RGB-D 6DoF Object Pose Estimation' (CVPR2024). [`ArXiv`](https://arxiv.org/abs/2311.12588)
 
 ![pipeline](pic/overview.png)
