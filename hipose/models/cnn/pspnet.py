@@ -47,7 +47,7 @@ class PSPUpsample(nn.Module):
 class PSPNet(nn.Module):
     def __init__(
             self, n_classes=22, sizes=(1, 2, 3, 6), psp_size=2048,
-            deep_features_size=1024, backend='resnet18', pretrained=False
+            deep_features_size=1024, backend='resnet18', pretrained=True
     ):
         super(PSPNet, self).__init__()
         if backend.startswith('resnet'):
