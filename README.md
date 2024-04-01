@@ -40,13 +40,15 @@ Setting up the environment can be tedious, so we've provided a Dockerfile to sim
 
 ## Testing
 Download our trained model from this [`link`](https://1drv.ms/f/s!At2pVfImERx7cM_BVybbo-ThTP4?e=wfbikU).
-`python test.py --cfg config/bop_lmo_config.txt --obj_name ape --ckpt_file /path/to/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /path/to/eval_output --new_solver_version True --region_bit 10`
+`python test.py --cfg config/test_lmo_config.txt --obj_name ape --ckpt_file /path/to/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /path/to/eval_output --new_solver_version True --region_bit 10`
 
 ## Training
-Adjust the paths in the config files, and train the network with `train.py`, e.g.
-`python train.py --cfg config/lmo_net_with_convnext.txt --obj_name ape`
-
 The script will save the last 3 checkpoints and the best checkpoint, as well as tensorboard log. 
+Adjust the paths in the config files, and train the network with `train.py`, e.g.
+`python train.py --cfg config/train_lmo_config.txt --obj_name ape`
+
+
+The primary difference between `train_config.txt` and `test_config.txt` lies in the detection files they use. The provided checkpoints were trained using `train_config.txt`, and the results reported in the paper were obtained using `test_config.txt`. However, it should be perfectly acceptable to train using `test_config.txt` or to test using `train_config.txt`.
 
 ## Evaluate for BOP challange 
 Merge the `.csv` files generated in the last step using `tools_for_BOP/merge_csv.py`, e.g.
