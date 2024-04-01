@@ -16,7 +16,7 @@ Setting up the environment can be tedious, so we've provided a Dockerfile to sim
 
 ## Data preparation
 1. Download the dataset from the [`BOP benchmark`](https://bop.felk.cvut.cz/datasets/). Currently, our focus is on the LMO, TLESS, and YCBV datasets. We recommend using the LMO dataset for testing purposes due to its smaller size.
-2. Download required ground truth (GT) folders of zebrapose from [`owncloud`](https://cloud.dfki.de/owncloud/index.php/s/zT7z7c3e666mJTW). The folders are `models_GT_color`, `XX_GT` (e.g. `train_real_GT` and `test_GT`) and `models` (`models` is optional, only if you want to generate GT from scratch, it contains more files needed to generate GT, but also contains all the origin files from BOP).
+2. Download required ground truth (GT) folders of zebrapose from [`owncloud`](https://cloud.dfki.de/owncloud/index.php/s/zT7z7c3e666mJTW). The folders are `models_GT_color`, `XX_GT` (e.g. `train_pbr_GT` and `test_GT`) and `models` (`models` is optional, only if you want to generate GT from scratch, it contains more files needed to generate GT, but also contains all the origin files from BOP).
 
 3. The expected data structure: 
     ```
