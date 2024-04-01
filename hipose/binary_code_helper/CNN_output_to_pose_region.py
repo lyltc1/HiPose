@@ -3,7 +3,6 @@ import time
 import random
 import numpy as np
 import cv2
-import pyprogressivex
 import open3d as o3d
 
 def load_dict_class_id_3D_points(path):
