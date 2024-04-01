@@ -19,3 +19,5 @@ data/tless/*
 docker/opencv-3.4.12.zip
 docker/opencv_contrib-3.4.12.zip
 output/*
+bop_lmo_config_.txt
+lmo_net_with_convnext_local.txt

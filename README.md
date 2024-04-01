@@ -40,14 +40,12 @@ The implementation of the paper 'HiPose: Hierarchical Binary Surface Encoding an
 ### Training
 Adjust the paths in the config files, and train the network with `train.py`, e.g.
 `python train.py --cfg config/lmo_net_with_convnext.txt --obj_name ape`
-<!-- `python train.py --cfg config/bop_lmo_config.txt --obj_name ape`
-`python train.py --cfg config/bop_ycbv_config.txt --obj_name wood_block` -->
 
 The script will save the last 3 checkpoints and the best checkpoint, as well as tensorboard log. 
 
 ## Test with trained model
 For most datasets, a specific object occurs only once in a test images. 
-`python test.py --cfg config/bop_ycbv_config.txt --obj_name wood_block --ckpt_file /path/to/ckpt/like/ycbv/wood_block/1_0000step207000 --eval_output /path/to/eval_output --new_solver_version True --region_bit 10`
+`python test.py --cfg config/bop_lmo_config.txt --obj_name ape --ckpt_file /path/to/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /path/to/eval_output --new_solver_version True --region_bit 10`
 Download our trained model from this [`link`](https://1drv.ms/f/s!At2pVfImERx7cM_BVybbo-ThTP4?e=wfbikU).
 
 ## Evaluate for BOP challange 
