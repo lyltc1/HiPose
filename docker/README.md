@@ -7,19 +7,20 @@
 
 ## Build 
 ```bash
-cd path/to/containing/Dockerfile
-docker build -t lyltc1/hipose:latest .
-(or without cache) docker build --no-cache -t lyltc1/hipose:latest .
+cd HiPose/docker
+bash build_docker.sh
 ```
 ## Usage
+Pay attention to the dataset and output volume.
 ```
-docker run -it --runtime=nvidia -e NVIDIA_DRIVER_CAPABILITIES=all --gpus all -p 8022:22 --shm-size 12G --device=/dev/dri --group-add video --volume=/tmp/.X11-unix:/tmp/.X11-unix --env="DISPLAY=$DISPLAY" --env="QT_X11_NO_MITSHM=1" --name z3d -v /home/lyl/dataset/:/home/dataset:ro -v /home/lyl/git/z3d/:/home/z3d:rw lyltc1/hipose:latest /bin/bash
+docker run -it --runtime=nvidia -e NVIDIA_DRIVER_CAPABILITIES=all --gpus all --shm-size 12G --device=/dev/dri --group-add video --volume=/tmp/.X11-unix:/tmp/.X11-unix --env="DISPLAY=$DISPLAY" --env="QT_X11_NO_MITSHM=1" --name HiPose -v /home/lyl/dataset/:/home/dataset:ro -v /home/lyl/git/output/:/home/HiPose/output:rw lyltc1/hipose:latest /bin/bash
 ```
 
 ## prepare soft link
+Assume the dataset and GT from zebrapose has been prepared.
 ```
-ln -sf /home/dataset/pbr/lmo/* /home/z3d/data/lmo/
-ln -sf /home/dataset/zebrapose/data/lmo/* /home/z3d/data/lmo/
+ln -sf /home/dataset/pbr/lmo/* /home/HiPose/data/lmo/
+ln -sf /home/dataset/zebrapose/data/lmo/* /home/HiPose/data/lmo/
 ```
 
 ## install bop_toolkit

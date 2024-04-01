@@ -5,6 +5,11 @@ ARG CUDNN="8"
 FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-runtime
 
 # Install git
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
+RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list
+RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse" >>/etc/apt/sources.list
+RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse" >>/etc/apt/sources.list
+RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted universe multiverse" >>/etc/apt/sources.list
 RUN apt-get update
 RUN apt-get install -y git
 
@@ -27,12 +32,12 @@ RUN cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local -D OPEN
 RUN make -j7 && make install
 WORKDIR /home
 RUN git clone https://github.com/hfutcgncas/normalSpeed.git
-WORKDIR /normalSpeed/normalSpeed
+WORKDIR /home/normalSpeed/normalSpeed
 RUN pip3 install "pybind11[global]"
 RUN python3 setup.py install --user
 
 # Install other dependency
-RUN apt-get install libgl1
+RUN apt-get install -y libgl1
 RUN pip install tqdm
 RUN pip install opencv-python-headless
 RUN pip install imgaug
