@@ -39,7 +39,7 @@ Setting up the environment can be tedious, so we've provided a Dockerfile to sim
 4. (Optional) Instead of download the ground truth, you can also generate them from scratch, details in [`Generate_GT.md`](Binary_Code_GT_Generator/Generate_GT.md). 
 
 ## Testing
-Download our trained model from this [`link`](https://1drv.ms/f/s!At2pVfImERx7cM_BVybbo-ThTP4?e=wfbikU).
+Download our trained model from this [`link`](https://1drv.ms/f/c/7b1c1126f255a9dd/Et2pVfImERwggHtwAAAAAAAB9jB0WOroeaU85GQqUK5EfA?e=og6KNj).
 `python test.py --cfg config/test_lmo_config.txt --obj_name ape --ckpt_file /path/to/lmo/lmo_convnext_ape/0_7824step86000 --eval_output /path/to/eval_output --new_solver_version True --region_bit 10`
 
 ## Training
