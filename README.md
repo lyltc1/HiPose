@@ -62,12 +62,11 @@ And then evaluate it according to [`bop_toolkit`](https://github.com/thodan/bop_
 Some code are adapted from [`ZebraPose`](https://github.com/suyz526/ZebraPose), [`FFB6D`](https://github.com/ethnhe/FFB6D), [`Pix2Pose`](https://github.com/kirumang/Pix2Pose), [`SingleShotPose`](https://github.com/microsoft/singleshotpose), [`GDR-Net`](https://github.com/THU-DA-6D-Pose-Group/GDR-Net).
 ## Citation
 ```
-@misc{lin2023hipose,
-      title={HiPose: Hierarchical Binary Surface Encoding and Correspondence Pruning for RGB-D 6DoF Object Pose Estimation}, 
-      author={Yongliang Lin and Yongzhi Su and Praveen Nathan and Sandeep Inuganti and Yan Di and Martin Sundermeyer and Fabian Manhardt and Didier Stricke and Jason Rambach and Yu Zhang},
-      year={2023},
-      eprint={2311.12588},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@inproceedings{lin2024hipose,
+  title={Hipose: Hierarchical binary surface encoding and correspondence pruning for rgb-d 6dof object pose estimation},
+  author={Lin, Yongliang and Su, Yongzhi and Nathan, Praveen and Inuganti, Sandeep and Di, Yan and Sundermeyer, Martin and Manhardt, Fabian and Stricker, Didier and Rambach, Jason and Zhang, Yu},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={10148--10158},
+  year={2024}
 }
 ```
