@@ -36,7 +36,7 @@ Setting up the environment can be tedious, so we've provided a Dockerfile to sim
         │   └── test_GT           #(from step 2)
         └── tless
     ```
-4. (Optional) Instead of download the ground truth, you can also generate them from scratch, details in [`Generate_GT.md`]([Binary_Code_GT_Generator/Generate_GT.md](https://github.com/suyz526/ZebraPose/blob/main/Binary_Code_GT_Generator/Generate_GT.md)). 
+4. (Optional) Instead of download the ground truth, you can also generate them from scratch, details in [`Generate_GT.md`]([Binary_Code_GT_Generator/Generate_GT.md](https://github.com/suyz526/ZebraPose/blob/main/Binary_Code_GT_Generator/Generate_GT.md). 
 
 ## Testing
 Download our trained model from this [`link`](https://1drv.ms/f/c/7b1c1126f255a9dd/Et2pVfImERwggHtwAAAAAAAB9jB0WOroeaU85GQqUK5EfA?e=og6KNj).
