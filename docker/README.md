@@ -1,10 +1,5 @@
 # Run Code in Docker
 
-## Download Opencv
-The normalSpeed function requires opencv3 as a necessary component.
-1. Download opencv = 3.4.12 from [this link](https://github.com/opencv/opencv/archive/refs/tags/3.4.12.zip).
-2. Download opencv_contrib = 3.4.12 from [this link](https://github.com/opencv/opencv_contrib/archive/refs/tags/3.4.12.zip).
-
 ## Download the image
 We provide an image that can be downloaded using the command below.
 ```
@@ -12,10 +7,16 @@ docker pull lyltc1/hipose:latest
 ```
 ## Build images
 Options: you can build the image by yourself.
+
+The normalSpeed function requires opencv3 as a necessary component.
+1. Download opencv = 3.4.12 from [this link](https://github.com/opencv/opencv/archive/refs/tags/3.4.12.zip).
+2. Download opencv_contrib = 3.4.12 from [this link](https://github.com/opencv/opencv_contrib/archive/refs/tags/3.4.12.zip).
+
 ```bash
 cd HiPose/docker
 bash build_docker.sh
 ```
+
 ## Usage
 Pay attention to the dataset and output volume.
 ```
