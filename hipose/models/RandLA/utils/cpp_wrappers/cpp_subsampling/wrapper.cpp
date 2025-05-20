@@ -1,7 +1,15 @@
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#define PY_ARRAY_UNIQUE_SYMBOL UNIQUE_ARRAY_API
 #include <Python.h>
 #include <numpy/arrayobject.h>
+#include <numpy/ndarraytypes.h>
 #include "grid_subsampling/grid_subsampling.h"
 #include <string>
+
+// Define NumPy array flags
+#ifndef NPY_ARRAY_IN
+#define NPY_ARRAY_IN NPY_ARRAY_INOUT_ARRAY2
+#endif
 
 
 
@@ -97,13 +105,13 @@ static PyObject *grid_subsampling_compute(PyObject *self, PyObject *args, PyObje
 		use_classes = false;
 
     // Interpret the input objects as numpy arrays.
-	PyObject *points_array = PyArray_FROM_OTF(points_obj, NPY_FLOAT, NPY_IN_ARRAY);
-	PyObject *features_array = NULL;
-	PyObject *classes_array = NULL;
+	PyArrayObject *points_array = (PyArrayObject *)PyArray_FROM_OTF(points_obj, NPY_FLOAT, NPY_ARRAY_IN);
+	PyArrayObject *features_array = NULL;
+	PyArrayObject *classes_array = NULL;
 	if (use_feature)
-		features_array = PyArray_FROM_OTF(features_obj, NPY_FLOAT, NPY_IN_ARRAY);
+		features_array = (PyArrayObject *)PyArray_FROM_OTF(features_obj, NPY_FLOAT, NPY_ARRAY_IN);
 	if (use_classes)
-		classes_array = PyArray_FROM_OTF(classes_obj, NPY_INT, NPY_IN_ARRAY);
+		classes_array = (PyArrayObject *)PyArray_FROM_OTF(classes_obj, NPY_INT, NPY_ARRAY_IN);
 
 	// Verify data was load correctly.
 	if (points_array == NULL)
@@ -243,9 +251,9 @@ static PyObject *grid_subsampling_compute(PyObject *self, PyObject *args, PyObje
 	classes_dims[1] = ldim;
 
     // Create output array
-	PyObject *res_points_obj = PyArray_SimpleNew(2, point_dims, NPY_FLOAT);
-	PyObject *res_features_obj = NULL;
-	PyObject *res_classes_obj = NULL;
+	PyArrayObject *res_points_obj = (PyArrayObject *)PyArray_SimpleNew(2, point_dims, NPY_FLOAT);
+	PyArrayObject *res_features_obj = NULL;
+	PyArrayObject *res_classes_obj = NULL;
 	PyObject *ret = NULL;
 
 	// Fill output array with values
@@ -254,13 +262,13 @@ static PyObject *grid_subsampling_compute(PyObject *self, PyObject *args, PyObje
 	if (use_feature)
 	{
 	    size_in_bytes = subsampled_points.size() * fdim * sizeof(float);
-		res_features_obj = PyArray_SimpleNew(2, feature_dims, NPY_FLOAT);
+		res_features_obj = (PyArrayObject *)PyArray_SimpleNew(2, feature_dims, NPY_FLOAT);
 		memcpy(PyArray_DATA(res_features_obj), subsampled_features.data(), size_in_bytes);
 	}
 	if (use_classes)
 	{
 		size_in_bytes = subsampled_points.size() * ldim * sizeof(int);
-		res_classes_obj = PyArray_SimpleNew(2, classes_dims, NPY_INT);
+		res_classes_obj = (PyArrayObject *)PyArray_SimpleNew(2, classes_dims, NPY_INT);
 		memcpy(PyArray_DATA(res_classes_obj), subsampled_classes.data(), size_in_bytes);
 	}
 
