@@ -1,4 +1,7 @@
 #!/bin/bash
+cd utils/nearest_neighbors
+pip isntall .
+cd ../../
 
 # Compile cpp subsampling
 cd cpp_subsampling
