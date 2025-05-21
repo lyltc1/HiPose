@@ -1,6 +1,6 @@
 numpy
 tqdm
 opencv-python-headless
-imgaug
+albumentations
 open3d
 timm
