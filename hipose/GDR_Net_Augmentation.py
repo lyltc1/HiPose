@@ -1,38 +1,46 @@
-import imgaug.augmenters as iaa
+import albumentations as A
 import numpy as np
 import cv2
 import random
 from os import listdir
 from os.path import isfile, join
 
-truncate_fg=True,
+truncate_fg=True
 change_back_ground_prob=0.5
 color_aug_prob=0.8
 
 
-image_augmentations_lm=(
-        iaa.Sequential([
-                iaa.Sometimes(0.4, iaa.CoarseDropout( p=0.1, size_percent=0.05) ),
-                iaa.Sometimes(0.5, iaa.GaussianBlur(np.random.rand())),
-                iaa.Sometimes(0.5, iaa.Add((-20, 20), per_channel=0.3)),
-                iaa.Sometimes(0.4, iaa.Invert(0.20, per_channel=True)),
-                iaa.Sometimes(0.5, iaa.Multiply((0.7, 1.4), per_channel=0.8)),
-                iaa.Sometimes(0.5, iaa.Multiply((0.7, 1.4))),
-                iaa.Sometimes(0.5, iaa.ContrastNormalization((0.5, 2.0), per_channel=0.3))
-        ], random_order=False)
-    )
+def random_per_channel_invert(image, **kwargs):
+    if random.random() < 0.2:  # 20%像素反转
+        for c in range(3):  # 对每个通道独立处理
+            if random.random() < 0.5:  # 50%概率反转该通道
+                image[..., c] = 255 - image[..., c]
+    return image
 
-image_augmentations_bop=(
-        iaa.Sequential([
-                iaa.Sometimes(0.5, iaa.CoarseDropout( p=0.2, size_percent=0.05) ),
-                iaa.Sometimes(0.5, iaa.GaussianBlur(1.2*np.random.rand())),
-                iaa.Sometimes(0.5, iaa.Add((-25, 25), per_channel=0.3)),
-                iaa.Sometimes(0.3, iaa.Invert(0.2, per_channel=True)),
-                iaa.Sometimes(0.5, iaa.Multiply((0.6, 1.4), per_channel=0.5)),
-                iaa.Sometimes(0.5, iaa.Multiply((0.6, 1.4))),
-                iaa.Sometimes(0.5, iaa.LinearContrast((0.5, 2.2), per_channel=0.3))
-                ], random_order = False)
-        )
+def create_augmentation_lm():
+    return A.Compose([
+        A.CoarseDropout(num_holes_range=(1, 6), hole_height_range=(6, 12), hole_width_range=(6, 12), fill="random_uniform", p=0.3),
+        A.GaussianBlur(blur_limit=(3, 7), sigma_limit=(0.1, 1.0), p=0.3),
+        A.RandomBrightnessContrast(brightness_limit=(-20, 20), contrast_limit=0,p=0.3), 
+        A.Lambda(name="RandomChannelInvert",image=random_per_channel_invert,p=0.4),
+        A.MultiplicativeNoise(multiplier=(0.7, 1.4), per_channel=True, p=0.3),
+        A.MultiplicativeNoise(multiplier=(0.7, 1.4), per_channel=False, p=0.3),
+        A.RandomBrightnessContrast(brightness_limit=0, contrast_limit=(0.5, 2.0), p=0.3),
+    ], p=1.0)
+
+def create_augmentation_bop():
+    return A.Compose([
+        A.CoarseDropout(num_holes_range=(1, 6), hole_height_range=(6, 12), hole_width_range=(6, 12), fill="random_uniform", p=0.3),
+        A.GaussianBlur(blur_limit=(3, 7), sigma_limit=(0.1, 1.0), p=0.3),
+        A.RandomBrightnessContrast(brightness_limit=(-20, 20), contrast_limit=0,p=0.3), 
+        A.Lambda(name="RandomChannelInvert",image=random_per_channel_invert,p=0.4),
+        A.MultiplicativeNoise(multiplier=(0.7, 1.4), per_channel=True, p=0.3),
+        A.MultiplicativeNoise(multiplier=(0.7, 1.4), per_channel=False, p=0.3),
+        A.RandomBrightnessContrast(brightness_limit=0, contrast_limit=(0.5, 2.0), p=0.3),
+    ], p=1.0)
+
+image_augmentations_lm = create_augmentation_lm()
+image_augmentations_bop = create_augmentation_bop()
 
 def resize_short_edge(im, target_size, max_size, stride=0, interpolation=cv2.INTER_LINEAR, return_scale=False):
     """Scale the shorter edge to the given size, with a limit of `max_size` on
@@ -73,124 +81,119 @@ def resize_short_edge(im, target_size, max_size, stride=0, interpolation=cv2.INT
         else:
             return padded_im
 
-
-
 def get_bg_image(filename, imH, imW, channel=3):
-        """keep aspect ratio of bg during resize target image size:
-
-        imHximWxchannel.
-        """
-        target_size = min(imH, imW)
-        max_size = max(imH, imW)
-        real_hw_ratio = float(imH) / float(imW)
-        bg_image = cv2.imread(filename)
-        bg_h, bg_w, bg_c = bg_image.shape
-        bg_image_resize = np.zeros((imH, imW, channel), dtype="uint8")
-        if (float(imH) / float(imW) < 1 and float(bg_h) / float(bg_w) < 1) or (
-            float(imH) / float(imW) >= 1 and float(bg_h) / float(bg_w) >= 1
-        ):
-            if bg_h >= bg_w:
-                bg_h_new = int(np.ceil(bg_w * real_hw_ratio))
-                if bg_h_new < bg_h:
-                    bg_image_crop = bg_image[0:bg_h_new, 0:bg_w, :]
-                else:
-                    bg_image_crop = bg_image
-            else:
-                bg_w_new = int(np.ceil(bg_h / real_hw_ratio))
-                if bg_w_new < bg_w:
-                    bg_image_crop = bg_image[0:bg_h, 0:bg_w_new, :]
-                else:
-                    bg_image_crop = bg_image
-        else:
-            if bg_h >= bg_w:
-                bg_h_new = int(np.ceil(bg_w * real_hw_ratio))
+    """keep aspect ratio of bg during resize target image size:
+    imHximWxchannel.
+    """
+    target_size = min(imH, imW)
+    max_size = max(imH, imW)
+    real_hw_ratio = float(imH) / float(imW)
+    bg_image = cv2.imread(filename)
+    bg_h, bg_w, bg_c = bg_image.shape
+    bg_image_resize = np.zeros((imH, imW, channel), dtype="uint8")
+    if (float(imH) / float(imW) < 1 and float(bg_h) / float(bg_w) < 1) or (
+        float(imH) / float(imW) >= 1 and float(bg_h) / float(bg_w) >= 1
+    ):
+        if bg_h >= bg_w:
+            bg_h_new = int(np.ceil(bg_w * real_hw_ratio))
+            if bg_h_new < bg_h:
                 bg_image_crop = bg_image[0:bg_h_new, 0:bg_w, :]
-            else:  # bg_h < bg_w
-                bg_w_new = int(np.ceil(bg_h / real_hw_ratio))
-                # logger.info(bg_w_new)
+            else:
+                bg_image_crop = bg_image
+        else:
+            bg_w_new = int(np.ceil(bg_h / real_hw_ratio))
+            if bg_w_new < bg_w:
                 bg_image_crop = bg_image[0:bg_h, 0:bg_w_new, :]
-        bg_image_resize_0 = resize_short_edge(bg_image_crop, target_size, max_size)
-        h, w, c = bg_image_resize_0.shape
-        bg_image_resize[0:h, 0:w, :] = bg_image_resize_0
-        return bg_image_resize
-
+            else:
+                bg_image_crop = bg_image
+    else:
+        if bg_h >= bg_w:
+            bg_h_new = int(np.ceil(bg_w * real_hw_ratio))
+            bg_image_crop = bg_image[0:bg_h_new, 0:bg_w, :]
+        else:  # bg_h < bg_w
+            bg_w_new = int(np.ceil(bg_h / real_hw_ratio))
+            bg_image_crop = bg_image[0:bg_h, 0:bg_w_new, :]
+    bg_image_resize_0 = resize_short_edge(bg_image_crop, target_size, max_size)
+    h, w, c = bg_image_resize_0.shape
+    bg_image_resize[0:h, 0:w, :] = bg_image_resize_0
+    return bg_image_resize
 
 def replace_bg(im, im_mask, bg_filenames, truncate_fg = False):
-        H, W = im.shape[:2]
-        
-        ind = random.randint(0, len(bg_filenames) - 1)
-        filename = bg_filenames[ind]
+    H, W = im.shape[:2]
+    
+    ind = random.randint(0, len(bg_filenames) - 1)
+    filename = bg_filenames[ind]
 
-        bg_img = get_bg_image(filename, H, W)
+    bg_img = get_bg_image(filename, H, W)
 
-        mask = im_mask.copy()
-        mask = mask.astype(np.bool)
-        if truncate_fg:
-            nonzeros = np.nonzero(mask.astype(np.uint8))
-            x1, y1 = np.min(nonzeros, axis=1)
-            x2, y2 = np.max(nonzeros, axis=1)
-            c_h = 0.5 * (x1 + x2)
-            c_w = 0.5 * (y1 + y2)
-            rnd = random.random()
-            # print(x1, x2, y1, y2, c_h, c_w, rnd, mask.shape)
-            if rnd < 0.2:  # block upper
-                c_h_ = int(random.uniform(x1, c_h))
-                mask[:c_h_, :] = False
-            elif rnd < 0.4:  # block bottom
-                c_h_ = int(random.uniform(c_h, x2))
-                mask[c_h_:, :] = False
-            elif rnd < 0.6:  # block left
-                c_w_ = int(random.uniform(y1, c_w))
-                mask[:, :c_w_] = False
-            elif rnd < 0.8:  # block right
-                c_w_ = int(random.uniform(c_w, y2))
-                mask[:, c_w_:] = False
-            else:
-                pass
-        mask_bg = ~mask
-        im[mask_bg] = bg_img[mask_bg]
-        im = im.astype(np.uint8)
-        return im, mask 
-
+    mask = im_mask.copy()
+    mask = mask.astype(np.bool)
+    if truncate_fg:
+        nonzeros = np.nonzero(mask.astype(np.uint8))
+        x1, y1 = np.min(nonzeros, axis=1)
+        x2, y2 = np.max(nonzeros, axis=1)
+        c_h = 0.5 * (x1 + x2)
+        c_w = 0.5 * (y1 + y2)
+        rnd = random.random()
+        if rnd < 0.2:  # block upper
+            c_h_ = int(random.uniform(x1, c_h))
+            mask[:c_h_, :] = False
+        elif rnd < 0.4:  # block bottom
+            c_h_ = int(random.uniform(c_h, x2))
+            mask[c_h_:, :] = False
+        elif rnd < 0.6:  # block left
+            c_w_ = int(random.uniform(y1, c_w))
+            mask[:, :c_w_] = False
+        elif rnd < 0.8:  # block right
+            c_w_ = int(random.uniform(c_w, y2))
+            mask[:, c_w_:] = False
+    mask_bg = ~mask
+    im[mask_bg] = bg_img[mask_bg]
+    im = im.astype(np.uint8)
+    return im, mask 
 
 def get_background_fns(path):
     fns = [join(path, f) for f in listdir(path) if isfile(join(path, f))]
     return fns
 
-
-def build_augmentations(use_peper_salt, use_motion_blur):
-    augmentations = []
+def build_augmentations(use_peper_salt=False, use_motion_blur=False):
+    transforms = []
+    
     if use_peper_salt:
-        augmentations.append(iaa.Sometimes(0.3, iaa.SaltAndPepper(0.05)))
-    if use_motion_blur:
-        augmentations.append(iaa.Sometimes(0.2, iaa.MotionBlur(k=5)))
-
-    augmentations = augmentations + [iaa.Sometimes(0.4, iaa.CoarseDropout( p=0.1, size_percent=0.05) ),
-                                    iaa.Sometimes(0.5, iaa.GaussianBlur(np.random.rand())),
-                                    iaa.Sometimes(0.5, iaa.Add((-20, 20), per_channel=0.3)),
-                                    iaa.Sometimes(0.4, iaa.Invert(0.20, per_channel=True)),
-                                    iaa.Sometimes(0.5, iaa.Multiply((0.7, 1.4), per_channel=0.8)),
-                                    iaa.Sometimes(0.5, iaa.Multiply((0.7, 1.4))),
-                                    iaa.Sometimes(0.5, iaa.ContrastNormalization((0.5, 2.0), per_channel=0.3))
-                                    ]
-  
-    image_augmentations=iaa.Sequential(augmentations, random_order = False)
-    return image_augmentations
+        transforms.append(A.ISONoise(p=0.3))  # Similar effect to salt and pepper noise
         
+    if use_motion_blur:
+        transforms.append(A.MotionBlur(blur_limit=5, p=0.2))
+        
+    base_transforms = [
+        A.CoarseDropout(num_holes_range=(1, 6), hole_height_range=(6, 12), hole_width_range=(6, 12), fill="random_uniform", p=0.3),
+        A.GaussianBlur(blur_limit=(3, 7), p=0.5),
+        A.OneOf([
+            A.RandomBrightnessContrast(brightness_limit=(-20, 20), contrast_limit=0,p=0.3), 
+            A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=20, p=0.5),
+        ], p=0.5),
+        A.Lambda(name="RandomChannelInvert",image=random_per_channel_invert,p=0.4),
+        A.OneOf([
+            A.MultiplicativeNoise(multiplier=(0.7, 1.4), per_channel=True, p=0.5),
+            A.MultiplicativeNoise(multiplier=(0.7, 1.4), p=0.5),
+        ], p=0.5),
+        A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.5, p=0.5),
+    ]
+    
+    transforms.extend(base_transforms)
+    return A.Compose(transforms, p=1.0)
+
 def affine_transform(pt, t):
     new_pt = np.array([pt[0], pt[1], 1.0], dtype=np.float32).T
     new_pt = np.dot(t, new_pt)
     return new_pt[:2]
 
-
 def get_3rd_point(a, b):
     direct = a - b
     return b + np.array([-direct[1], direct[0]], dtype=np.float32)
 
-
 def get_dir(src_point, rot_rad):
     sn, cs = np.sin(rot_rad), np.cos(rot_rad)
-
     src_result = [0, 0]
     src_result[0] = src_point[0] * cs - src_point[1] * sn
     src_result[1] = src_point[0] * sn + src_point[1] * cs

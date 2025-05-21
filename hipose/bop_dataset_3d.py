@@ -643,8 +643,8 @@ class bop_dataset_single_obj_3d(Dataset):
         augmentations = GDR_Net_Augmentation.build_augmentations(self.use_peper_salt, self.use_motion_blur)      
         color_aug_prob = 0.8
         if np.random.rand() < color_aug_prob:
-            x = augmentations.augment_image(x)
-
+            transformed = augmentations(image=x)
+            x = transformed['image']
         return x
     
     @staticmethod
