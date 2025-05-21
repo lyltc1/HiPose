@@ -12,7 +12,9 @@ sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, 'utils'))
 
 import cpp_wrappers.cpp_subsampling.grid_subsampling as cpp_subsampling
-import nearest_neighbors.lib.python.nearest_neighbors as nearest_neighbors
+import sys
+sys.path.append('utils/nearest_neighbors')
+import nearest_neighbors
 
 
 class ConfigSemanticKITTI:
@@ -249,13 +251,13 @@ class DataProcessing:
     def get_class_weights(dataset_name):
         # pre-calculate the number of points in each category
         num_per_class = []
-        if dataset_name is 'S3DIS':
+        if dataset_name == 'S3DIS':
             num_per_class = np.array([3370714, 2856755, 4919229, 318158, 375640, 478001, 974733,
                                       650464, 791496, 88727, 1284130, 229758, 2272837], dtype=np.int32)
-        elif dataset_name is 'Semantic3D':
+        elif dataset_name == 'Semantic3D':
             num_per_class = np.array([5181602, 5012952, 6830086, 1311528, 10476365, 946982, 334860, 269353],
                                      dtype=np.int32)
-        elif dataset_name is 'SemanticKITTI':
+        elif dataset_name == 'SemanticKITTI':
             num_per_class = np.array([55437630, 320797, 541736, 2578735, 3274484, 552662, 184064, 78858,
                                       240942562, 17294618, 170599734, 6369672, 230413074, 101130274, 476491114,
                                       9833174, 129609852, 4506626, 1168181])
