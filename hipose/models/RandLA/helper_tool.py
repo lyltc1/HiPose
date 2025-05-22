@@ -12,8 +12,6 @@ sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, 'utils'))
 
 import cpp_wrappers.cpp_subsampling.grid_subsampling as cpp_subsampling
-import sys
-sys.path.append('utils/nearest_neighbors')
 import nearest_neighbors
 
 
