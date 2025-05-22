@@ -1,7 +1,4 @@
-cd utils/nearest_neighbors
-python3 setup.py install --home="."
-cd ../../
-
-cd utils/cpp_wrappers
-sh compile_wrappers.sh
-cd ../../../
+cd utils/cpp_wrappers/nearest_neighbors
+pip install .
+cd ../cpp_subsampling/
+python3 setup.py build_ext --inplace
