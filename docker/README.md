@@ -3,30 +3,32 @@
 ## Download the image
 We provide an image that can be downloaded using the command below.
 ```
-docker pull lyltc1/hipose:latest
+docker pull lyltc1/hipose:pytorch2.4.1-cuda12.1-cudnn9
 ```
 ## Build images
 Options: you can build the image by yourself.
-
-The normalSpeed function requires opencv3 as a necessary component.
-1. Download opencv = 3.4.12 from [this link](https://github.com/opencv/opencv/archive/refs/tags/3.4.12.zip).
-2. Download opencv_contrib = 3.4.12 from [this link](https://github.com/opencv/opencv_contrib/archive/refs/tags/3.4.12.zip).
 
 ```bash
 cd HiPose/docker
 bash build_docker.sh
 ```
 
+The normalSpeed function requires opencv3 as a necessary component. If `opencv` does not download successfully, you can try to download it manually.
+1. Download opencv = 3.4.12 from [this link](https://github.com/opencv/opencv/archive/refs/tags/3.4.12.zip).
+2. Download opencv_contrib = 3.4.12 from [this link](https://github.com/opencv/opencv_contrib/archive/refs/tags/3.4.12.zip).
 ## Usage
 Pay attention to the dataset and output volume.
 ```
+DATASET_PATH=/home/timli/bop/
+OUTPUT_PATH=/home/timli/git/HiPose/output
+
 docker run -it --runtime=nvidia -e NVIDIA_DRIVER_CAPABILITIES=all \
 --gpus all --shm-size 12G --device=/dev/dri --group-add video \
 --volume=/tmp/.X11-unix:/tmp/.X11-unix --env="DISPLAY=$DISPLAY" \
---env="QT_X11_NO_MITSHM=1" --name HiPose \
--v path/to/dataset/:/home/dataset:ro \
--v path/to/output/:/home/HiPose/output:rw \
-lyltc1/hipose:latest /bin/bash
+--env="QT_X11_NO_MITSHM=1" \
+-v ${DATASET_PATH}:/home/dataset:ro \
+-v ${OUTPUT_PATH}:/home/HiPose/output:rw \
+lyltc1/hipose:pytorch2.4.1-cuda12.1-cudnn9 /bin/bash
 ```
 
 ## Update Code

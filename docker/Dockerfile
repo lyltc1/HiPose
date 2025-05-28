@@ -1,22 +1,11 @@
-ARG PYTORCH="1.13.1"
-ARG CUDA="11.6"
-ARG CUDNN="8"
+ARG PYTORCH="2.4.1"
+ARG CUDA="12.1"
+ARG CUDNN="9"
 
 FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-runtime
 
-# Install git
-# remove the following 5 lines if you don't need the mirrors
-RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list
-RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse" >>/etc/apt/sources.list
-RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-backports main restricted universe multiverse" >>/etc/apt/sources.list
-RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted universe multiverse" >>/etc/apt/sources.list
+# Basic setting 
 RUN apt-get update
-RUN apt-get install -y git
-
-# clone the code
-WORKDIR /home
-RUN git clone https://github.com/lyltc1/HiPose.git
 
 # Install normalSpeed
 RUN apt-get install -y build-essential unzip
@@ -38,16 +27,21 @@ RUN pip3 install "pybind11[global]"
 RUN python3 setup.py install --user
 
 # Install other dependency
-RUN apt-get install -y libgl1
-RUN pip install tqdm
-RUN pip install tensorboard
-RUN pip install opencv-python-headless
-RUN pip install imgaug
-RUN pip install pandas
-RUN pip install scikit-learn
-RUN pip install open3d-cpu
-RUN pip install timm
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt install -y python3-tk
+RUN apt-get install -y libgl1
+RUN pip install --no-cache-dir \
+    tqdm==4.66.5 \
+    tensorboard==2.19.0 \
+    opencv-python-headless==4.11.0.86 \
+    pandas==2.2.3 \
+    scikit-learn==1.6.1 \
+    open3d-cpu==0.19.0 \
+    albumentations==2.0.7 \
+    timm==1.0.15 
+
+# clone the code
+WORKDIR /home
+RUN git clone https://github.com/lyltc1/HiPose.git
 
 # Install bop_toolkit in editing mode
 WORKDIR /home/HiPose/hipose/bop_toolkit
@@ -55,10 +49,8 @@ RUN pip install -r requirements.txt -e .
 
 # Install Randla-net
 WORKDIR /home/HiPose/hipose/models/RandLA
-RUN sh compile_op.sh
-RUN cp /home/HiPose/hipose/models/RandLA/utils/nearest_neighbors/lib/python/KNN_NanoFLANN-0.0.0-py3.10-linux-x86_64.egg/nearest_neighbors.cpython-310-x86_64-linux-gnu.so /home/HiPose/hipose/models/RandLA/utils/nearest_neighbors/lib/python/nearest_neighbors.cpython-310-x86_64-linux-gnu.so
-RUN cp /home/HiPose/hipose/models/RandLA/utils/nearest_neighbors/lib/python/KNN_NanoFLANN-0.0.0-py3.10-linux-x86_64.egg/nearest_neighbors.py /home/HiPose/hipose/models/RandLA/utils/nearest_neighbors/lib/python/nearest_neighbors.py
 
+RUN sh compile_op.sh
 # Clean everything
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
@@ -68,6 +60,6 @@ RUN rm opencv_contrib-3.4.12.zip
 RUN rm -r opencv-3.4.12
 RUN rm -r opencv_contrib-3.4.12
 
-
+WORKDIR /home/HiPose
 
 
